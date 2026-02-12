@@ -26,7 +26,6 @@ const CartScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
-  // Load data when screen comes into focus
   useFocusEffect(
     useCallback(() => {
       loadAllData();
@@ -148,7 +147,7 @@ const CartScreen = ({ navigation }) => {
       if (!exists) {
         const itemToAdd = {
           ...item,
-          quantity: 1, // Reset quantity for favorites
+          quantity: 1,
           addedAt: new Date().toISOString(),
         };
         
@@ -156,7 +155,6 @@ const CartScreen = ({ navigation }) => {
         await AsyncStorage.setItem('favorites', JSON.stringify(favoritesList));
         setFavorites(favoritesList);
         
-        // Remove from cart
         const updatedCart = cartItems.filter(cartItem => cartItem.id !== item.id);
         setCartItems(updatedCart);
         await AsyncStorage.setItem('cart', JSON.stringify(updatedCart));
@@ -217,7 +215,6 @@ const CartScreen = ({ navigation }) => {
         <Image 
           source={{ uri: item.thumbnail }} 
           style={styles.itemImage}
-          // defaultSource={require('../assets/placeholder.png')}
         />
         
         <View style={styles.itemDetails}>
@@ -277,7 +274,6 @@ const CartScreen = ({ navigation }) => {
     );
   };
 
-  // Render loading state
   const renderLoading = () => (
     <SafeAreaView style={styles.container}>
       <View style={styles.loadingContainer}>
@@ -287,7 +283,6 @@ const CartScreen = ({ navigation }) => {
     </SafeAreaView>
   );
 
-  // Render empty cart
   const renderEmptyCart = () => (
     <View style={styles.emptyContainer}>
       <Icon name="shopping-cart" size={80} color="#E0E0E0" />
@@ -304,7 +299,6 @@ const CartScreen = ({ navigation }) => {
     </View>
   );
 
-  // Render cart with items
   const renderCartWithItems = () => (
     <>
       <FlatList
@@ -326,7 +320,6 @@ const CartScreen = ({ navigation }) => {
         }
       />
       
-      {/* Checkout Summary */}
       <View style={styles.summaryContainer}>
         <Text style={styles.summaryTitle}>Order Summary</Text>
         
@@ -385,31 +378,9 @@ const CartScreen = ({ navigation }) => {
     </>
   );
 
-  // Main render - NO conditional hooks, only conditional rendering
   return (
     <SafeAreaView style={styles.container}>
-      {/* Header - Always visible */}
-      {/* <View style={styles.header}>
-        <Text style={styles.headerTitle}>Shopping Cart</Text>
-        <View style={styles.headerButtons}>
-          <TouchableOpacity 
-            style={styles.refreshButton}
-            onPress={handleRefresh}
-            disabled={refreshing || loading}
-          >
-            <Icon 
-              name="refresh" 
-              size={24} 
-              color={refreshing || loading ? '#CCC' : '#fff'} 
-            />
-          </TouchableOpacity>
-          <View style={styles.countBadge}>
-            <Text style={styles.countText}>{totalItems} {totalItems === 1 ? 'item' : 'items'}</Text>
-          </View>
-        </View>
-      </View> */}
       
-      {/* Stats Cards - Always visible */}
       <View style={styles.statsContainer}>
         <View style={styles.statCard}>
           <Icon name="shopping-cart" size={26} color="#FF6B6B" />
@@ -428,7 +399,6 @@ const CartScreen = ({ navigation }) => {
         </View>
       </View>
       
-      {/* Conditional rendering based on state */}
       {loading ? (
         <View style={styles.contentArea}>
           <ActivityIndicator size="large" color="#FF6B6B" />

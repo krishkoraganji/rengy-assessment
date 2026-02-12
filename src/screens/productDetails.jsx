@@ -26,21 +26,18 @@ const ProductDetailScreen = ({ route, navigation }) => {
   const [loading, setLoading] = useState(false);
   const flatListRef = useRef(null);
   const scrollTimer = useRef(null);
-
-  // Safely get images array
+console.log("product",product)
   const images = product?.images || (product?.thumbnail ? [product.thumbnail] : []);
 
   useEffect(() => {
     checkCartStatus();
     checkFavoriteStatus();
     
-    // Start auto-scroll
     if (images.length > 1) {
       startAutoScroll();
     }
     
     return () => {
-      // Cleanup timer on unmount
       if (scrollTimer.current) {
         clearInterval(scrollTimer.current);
       }
@@ -164,7 +161,6 @@ const ProductDetailScreen = ({ route, navigation }) => {
       if (newIndex !== undefined && newIndex !== currentImageIndex) {
         setCurrentImageIndex(newIndex);
         
-        // Reset timer when user manually scrolls
         if (scrollTimer.current) {
           clearInterval(scrollTimer.current);
         }
@@ -186,7 +182,6 @@ const ProductDetailScreen = ({ route, navigation }) => {
     return (product.price * (100 - product.discountPercentage)) / 100;
   };
 
-  // Safe data access
   const safeProduct = product || {};
   const safeTitle = safeProduct.title || 'No Title';
   const safeBrand = safeProduct.brand || 'No Brand';
@@ -210,7 +205,6 @@ const ProductDetailScreen = ({ route, navigation }) => {
 
   return (
     <ScrollView style={styles.container}>
-      {/* Image Carousel */}
       {images.length > 0 ? (
         <View style={styles.carouselContainer}>
           <FlatList
@@ -231,7 +225,6 @@ const ProductDetailScreen = ({ route, navigation }) => {
             })}
           />
           
-          {/* Image Indicators - only show if multiple images */}
           {images.length > 1 && (
             <View style={styles.indicatorContainer}>
               {images.map((_, index) => (

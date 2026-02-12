@@ -216,12 +216,6 @@ const FavoritesScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* <View style={styles.header}>
-        <Text style={styles.headerTitle}>My Favorites</Text>
-        <View style={styles.countBadge}>
-          <Text style={styles.countText}>{favorites.length} items</Text>
-        </View>
-      </View> */}
       
       <View style={styles.searchContainer}>
         <Icon name="search" size={20} color="#666" style={styles.searchIcon} />

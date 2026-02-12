@@ -20,10 +20,9 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const API_URL = 'https://dummyjson.com/products';
-const { width } = Dimensions.get('window'); // Move width here
+const { width } = Dimensions.get('window');
 
 const ProductListScreen = ({ navigation }) => {
-  // State declarations
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -37,13 +36,11 @@ const ProductListScreen = ({ navigation }) => {
   const [cart, setCart] = useState([]);
   const [loadingFavorites, setLoadingFavorites] = useState(true);
   const [loadingCart, setLoadingCart] = useState(true);
-  const [autoScrollIndex, setAutoScrollIndex] = useState(0); // Move state declaration to top
+  const [autoScrollIndex, setAutoScrollIndex] = useState(0);
 
-  // Refs
   const scrollViewRef = useRef();
   const scrollX = useRef(new Animated.Value(0)).current;
 
-  // Main data fetching effect
   useEffect(() => {
     const fetchAllData = async () => {
       try {
@@ -60,12 +57,10 @@ const ProductListScreen = ({ navigation }) => {
     fetchAllData();
   }, []);
 
-  // Filter and sort effect
   useEffect(() => {
     filterAndSortProducts();
   }, [searchQuery, selectedCategory, sortBy, products]);
 
-  // Auto-scroll effect for featured products - FIXED
   useEffect(() => {
     let interval;
     
@@ -90,9 +85,8 @@ const ProductListScreen = ({ navigation }) => {
     return () => {
       if (interval) clearInterval(interval);
     };
-  }, [filteredProducts]); // Removed width dependency
+  }, [filteredProducts]);
 
-  // Functions
   const fetchProducts = async () => {
     try {
       setLoading(true);
@@ -100,7 +94,6 @@ const ProductListScreen = ({ navigation }) => {
       const data = await response.json();
       setProducts(data.products);
       
-      // Extract unique categories
       const uniqueCategories = ['All', ...new Set(data.products.map(p => p.category))];
       setCategories(uniqueCategories);
     } catch (error) {
@@ -181,7 +174,6 @@ const ProductListScreen = ({ navigation }) => {
       setCart(updatedCart);
       await AsyncStorage.setItem('cart', JSON.stringify(updatedCart));
       
-      // Show success message
       alert('Product added to cart!');
     } catch (error) {
       console.error('Error adding to cart:', error);
@@ -191,12 +183,10 @@ const ProductListScreen = ({ navigation }) => {
   const filterAndSortProducts = () => {
     let filtered = [...products];
     
-    // Filter by category
     if (selectedCategory !== 'All') {
       filtered = filtered.filter(product => product.category === selectedCategory);
     }
     
-    // Filter by search query - FIXED
     if (searchQuery.trim() !== '') {
       filtered = filtered.filter(product =>
         product.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -205,7 +195,6 @@ const ProductListScreen = ({ navigation }) => {
       );
     }
     
-    // Sort products
     switch (sortBy) {
       case 'price-low':
         filtered.sort((a, b) => a.price - b.price);
@@ -232,7 +221,6 @@ const ProductListScreen = ({ navigation }) => {
     setSortBy('default');
   };
 
-  // Safe image render function
   const renderImage = (uri, style) => {
     if (!uri) {
       return (
@@ -250,7 +238,7 @@ const ProductListScreen = ({ navigation }) => {
     );
   };
 
-  // Render functions
+  console.log("products",products)
   const renderProductItem = ({ item }) => {
     const isFavorite = favorites.some(fav => fav.id === item.id);
     const discountPercentage = item.discountPercentage || 0;
@@ -329,7 +317,6 @@ const ProductListScreen = ({ navigation }) => {
     { label: 'Name: A to Z', value: 'name' },
   ];
 
-  // Loading state
   if (loading || loadingFavorites || loadingCart) {
     return (
       <View style={styles.fullScreenLoader}>
@@ -339,10 +326,8 @@ const ProductListScreen = ({ navigation }) => {
     );
   }
 
-  // Main render
   return (
     <View style={styles.container}>
-      {/* Header */}
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Products</Text>
         <View style={styles.headerIcons}>
@@ -373,7 +358,6 @@ const ProductListScreen = ({ navigation }) => {
         </View>
       </View>
 
-      {/* Search Bar */}
       <View style={styles.searchContainer}>
         <Icon name="search" size={24} color="#666" style={styles.searchIcon} />
         <TextInput
@@ -396,7 +380,6 @@ const ProductListScreen = ({ navigation }) => {
         </TouchableOpacity>
       </View>
 
-      {/* Categories */}
       <View style={styles.categoriesContainer}>
         <ScrollView 
           horizontal 
@@ -425,7 +408,6 @@ const ProductListScreen = ({ navigation }) => {
         </ScrollView>
       </View>
 
-      {/* Active Filters */}
       {(searchQuery || selectedCategory !== 'All' || sortBy !== 'default') && (
         <View style={styles.activeFiltersContainer}>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
@@ -462,7 +444,6 @@ const ProductListScreen = ({ navigation }) => {
         </View>
       )}
 
-      {/* Featured Products Section */}
       {filteredProducts.length > 0 ? (
         <ScrollView
           refreshControl={
@@ -515,7 +496,6 @@ const ProductListScreen = ({ navigation }) => {
                 </TouchableOpacity>
               ))}
             </ScrollView>
-            {/* Dots Indicator */}
             <View style={styles.dotsContainer}>
               {filteredProducts.slice(0, 5).map((_, index) => {
                 const inputRange = [
@@ -552,7 +532,6 @@ const ProductListScreen = ({ navigation }) => {
             </View>
           </View>
 
-          {/* All Products Section */}
           <View style={styles.productsSection}>
             <View style={styles.productsHeader}>
               <Text style={styles.sectionTitle}>All Products</Text>
@@ -600,7 +579,6 @@ const ProductListScreen = ({ navigation }) => {
         </View>
       )}
 
-      {/* Sort Modal */}
       <Modal
         animationType="slide"
         transparent={true}
